@@ -1,0 +1,6 @@
+RewriteEngine on
+
+# Redirects all the request to the index.php except directories and files
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^(.*)$ index.php?action=$1 [L]
