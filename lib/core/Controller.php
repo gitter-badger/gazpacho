@@ -5,8 +5,17 @@ use \Gazpacho\Logger;
 
 abstract class Controller
 {
-    public function __construct()
+    private $_view;
+
+    public function __construct() { }
+
+    public function setView($view)
     {
-        Logger::write('Controller initialization…');
+        $this->_view = $view;
+    }
+
+    public function view()
+    {
+        return $this->_view;
     }
 }

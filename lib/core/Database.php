@@ -1,6 +1,7 @@
 <?php
 namespace Gazpacho;
 
+use \Gazpacho\Application;
 use \Gazpacho\Logger;
 
 final class Database
@@ -10,7 +11,11 @@ final class Database
     public function __construct()
     {
         $config = require '../config/db.php';
-        $this->_connection = new \PDO('mysql:host=' . $config['host'] . ';port=' . $config['port'] . 'dbname=' . $config['database'], $config['username'], $config['password'], array(\PDO::ATTR_PERSISTENT => false));
+        $this->_connection = new \PDO(
+            'mysql:host=' . $config[Application::config('environment')]['host'] . ';port=' . $config[Application::config('environment')]['port'] . 'dbname=' . $config[Application::config('environment')]['database'],
+            $config[Application::config('environment')]['username'],
+            $config[Application::config('environment')]['password'],
+            array(\PDO::ATTR_PERSISTENT => FALSE));
     }
 
     public function query($sql)
@@ -20,6 +25,6 @@ final class Database
 
     public function __destruct()
     {
-        mysql_close($this->_connection);
+        $this->_connection = NULL;
     }
 }

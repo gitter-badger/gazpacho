@@ -40,7 +40,7 @@ final class Request
             return $this->_getParameters[$parameter];
         }
         else {
-            Logger::write('Parameter \'' . $parameter . '\' not found in request…');
+            Logger::write('Parameter \'' . $parameter . '\' not found in request…', Logger::WARNING);
         }
     }
 }

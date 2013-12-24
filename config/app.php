@@ -1,6 +1,6 @@
 <?php
 return [
     'environment' => 'debug',
-    'applicationName' => 'dummy',
+    'applicationName' => 'Dummy',
     'version' => '0.0.1'
 ];
