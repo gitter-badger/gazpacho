@@ -17,27 +17,33 @@ final class Router
             $req = new Request();
             $action = $req->parameter('action');
 
-            $components = explode('/', $action);
-            $controller = empty($components) > 0 ? '\\' . Application::config('applicationName') . '\\' . array_shift($components) . 'Controller' : '\\' . Application::config('applicationName') . '\\' . 'HomeController';
+            $components = $action == '' ? $components = ['Home', 'index'] : explode('/', $action);
+
+            $controller = '\\' . Application::config('applicationName') . '\\' . array_shift($components) . 'Controller';
 
             if (class_exists(ucfirst($controller))) {
                 Logger::write('>> Controller ' . $controller . ' found!');
                 
-                $controller = new $controller();
-                $method = empty($components) > 0 ? array_shift($components) : 'index';
+                $class = new $controller();
+                $method = empty($components) ? 'index' : array_shift($components);
 
-                if (method_exists($controller, $method)) {
+                if (method_exists($class, $method)) {
                     Logger::write('>> Method ' . $method . ' found!');
                     Logger::write('>> Executing action "' . $controller .'::' . $method . '"');
-                    return $controller->$method();
+                    try {
+                        return $class->$method();
+                    } catch (\Exception $e) {
+                        Logger::write($e);
+                        return $e;
+                    }
                 }
                 else {
-                    Logger::write('>> Method ' . $method . ' not found!');
+                    Logger::write('>> Method ' . $method . ' not found!', Logger::WARNING);
                     throw new RouteException(RouteException::METHOD_NOT_FOUND_ERROR, $method);
                 }
             }
             else {
-                Logger::write('>> Controller ' . $controller . ' not found!');
+                Logger::write('>> Controller ' . $controller . ' not found!', Logger::WARNING);
                 throw new RouteException(RouteException::CONTROLLER_NOT_FOUND_ERROR, $controller);
             }
         } catch (RouteException $e) {

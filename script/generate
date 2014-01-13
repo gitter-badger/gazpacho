@@ -1,0 +1,328 @@
+#!/usr/bin/php
+<?php
+
+function checkFileName($path, $name,  $mvc)
+{
+    $proceed = TRUE;
+
+    if (file_exists($path)) {
+        switch ($mvc) {
+            case 'm':
+                echo ' !! File "app/models/' . $name . '.php" ' . "\033[0;91m" . 'already exists!' . "\033[0;37m" . "\r\n" . '    Overwrite it? ';
+                break;
+            case 'c':
+                echo ' !! File "app/controllers/' . $name . 'Controller.php" ' . "\033[0;91m" . 'already exists!' . "\033[0;37m" . "\r\n" . '    Overwrite it? ';
+                break;
+            case 'v':
+                echo ' !! File "app/views/' . $name . '.html" ' . "\033[0;91m" . 'already exists!' . "\033[0;37m" . "\r\n" . '    Overwrite it? ';
+                break;
+            default:
+                break;
+        }
+
+        do {
+            fscanf(STDIN, "%c\n", $in);
+
+            switch ($in) {
+                case 'y':
+                case 'Y':
+                    $proceed = TRUE;
+                    break;
+                case 'n':
+                case 'N':
+                    $proceed = FALSE;
+                    break;
+                default:
+                    echo ' >> Only y/n: ';
+                    break;
+            }
+        } while ($in != 'y' && $in != 'Y' && $in != 'n' && $in != 'N');
+    }
+    
+    return $proceed;
+}
+
+function generateController($name, $isScaffolding = FALSE)
+{
+    echo "\r\n";
+
+    $appConfig = require __DIR__ . '/../config/app.php';
+
+    $namespace = $appConfig['applicationName'];
+    $name = ucfirst($name);
+
+    $fileName = __DIR__ . '/../app/controllers/' . $name . 'Controller.php';
+
+    if (checkFileName($fileName, $name, 'c')) {
+        echo ' >> Generating' . "\033[0;94m" . ' controller ' . "\033[0;37m" . 'for entity "' . $name . '"\'s logic…';
+
+        $data = '';
+        if ($isScaffolding) {
+            $data = <<<PHP
+<?php
+namespace {$namespace};
+
+use \Gazpacho\Controller;
+use \Gazpacho\View;
+
+/**
+ * Explain how this class work!
+ */
+class {$name}Controller extends Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function index()
+    {
+        \$view = new View('{$name}', ['info' => 'This file is stored in /app/views/{$name}.html']);
+        
+        return \$view->render();
+    }
+}
+PHP;
+        }
+        else {
+            $data = <<<PHP
+<?php
+namespace {$namespace};
+
+use \Gazpacho\Controller;
+use \Gazpacho\View;
+
+/**
+ * Explain how this class work!
+ */
+class {$name}Controller extends Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function index()
+    {
+        // Implement the main action here!
+    }
+}
+PHP;
+        }
+
+        $file = fopen($fileName, 'a+');
+
+        ftruncate($file, 0); 
+        fwrite($file, $data);
+        fclose($file);
+
+        echo " \033[0;32m" . 'DONE!'. "\r\n";
+    }
+
+    echo "\033[0;37m\r\n";
+}
+
+function generateModel($arg, $isScaffolding = FALSE)
+{
+    echo "\r\n";
+
+    $appConfig = require __DIR__ . '/../config/app.php';
+
+    $namespace = $appConfig['applicationName'];
+    $capitalizedName = ucfirst($arg[2]);
+    $tableName = $arg[2];
+    $isFail = FALSE;
+
+    $fileName = __DIR__ . '/../app/models/' . $capitalizedName . '.php';
+
+    // Table name plurification
+    if (checkFileName($fileName, $capitalizedName, 'm')) {
+        switch (substr($arg[2], -1)) {
+            case 'i':
+            case 'n':
+            case 'l':
+            case 'r':
+            case 'b':
+                $tableName = $arg[2] . 'es';
+                break;
+            default:
+                $tableName = $arg[2] . 's';
+                break;
+        }
+
+        echo ' >> Generating' . "\033[0;94m" . ' model ' . "\033[0;37m" . 'for table "' . $tableName . '"…';
+
+        // Deletes the first three entries of the arguments array
+        array_shift($arg);
+        array_shift($arg);
+        array_shift($arg);
+
+        if (empty($arg)) {
+            echo " \033[0;91m" . 'ERROR!' . "\r\n";
+            echo "    \033[0;37mYou must specify almost one field for this model…\r\n";
+        }
+        else {
+            $var = '';
+            $construct = '';
+            $arrayFields = '';
+            foreach ($arg as $field) {
+                $field = explode('=', $field);
+    
+                $varName = $field[0];
+                $varType = $field[1];
+    
+                $capitalizedVarName = ucfirst($varName);
+    
+                $var .= <<<PHP
+    private \$_{$varName};
+    public function {$varName}() { return \$this->_{$varName}; }
+    public function set{$capitalizedVarName}(\${$varName}) { \$this->_{$varName} = \${$varName}; }
+
+PHP;
+
+                $arrayFields .= <<<PHP
+            '{$varName}' => '{$varType}',
+
+PHP;
+
+                switch ($varType) {
+                    case 'string':
+                    case 'text':
+                        $construct .= <<<PHP
+            \$this->_{$varName} = '';
+
+PHP;
+                    break;
+                    case 'integer':
+                        $construct .= <<<PHP
+            \$this->_{$varName} = 0;
+
+PHP;
+                    break;
+                    case 'datetime':
+                        $construct .= <<<PHP
+            \$this->_{$varName} = new \DateTime('NOW');
+
+PHP;
+                    break;
+                    default:
+                        $isFail = TRUE;
+                        $varFailed = $varName;
+                        $typeFailed = $varType;
+                    break;
+                }
+            }
+
+            $arrayFields = substr($arrayFields, 0, -1);
+
+            if ($isFail) {
+                echo " \033[0;33m" . 'WARNING!' . "\r\n";
+                echo "    \033[0;37mThe field type \"{$typeFailed}\" for field \"{$varFailed}\" is not currently supported…\r\n";
+            }
+            else {
+
+                $data = <<<PHP
+<?php
+namespace {$namespace};
+
+use \Gazpacho\Model;
+
+/**
+ * Explain what this model represents!
+ */
+class {$capitalizedName} extends Model
+{
+{$var}
+    public function __construct(\$id = 0)
+    {
+        parent::__construct('{$tableName}', [
+{$arrayFields}
+        ]);
+
+        \$this->_id = \$id;
+
+        if (\$this->_id == 0) {
+{$construct}
+        }
+        else {
+            return \$this->getOne(\$this->_id);
+        }
+    }
+}
+PHP;
+
+                $file = fopen($fileName, 'a+');
+
+                ftruncate($file, 0);
+                fwrite($file, $data);
+                fclose($file);
+
+                echo " \033[0;32m" . 'DONE!'. "\r\n";
+                echo "    \033[0;37mRemember the first time this model loads, it will generate the table \"{$tableName}\" in database!\r\n";
+            }
+        }
+    }
+
+    echo "\033[0;37m\r\n";
+}
+
+function generateView($name, $isScaffolding = FALSE)
+{
+    echo "\r\n";
+
+    $appConfig = require __DIR__ . '/../config/app.php';
+    $namespace = $appConfig['applicationName'];
+    $fileName = __DIR__ . '/../app/views/' . $name . '.html';
+
+    if (checkFileName($fileName, $name, 'v')) {
+        echo ' >> Generating' . "\033[0;94m" . ' view ' . "\033[0;37m" . 'for controller "' . ucfirst($name) . 'Controller"…';
+
+        $data = '';
+        if ($isScaffolding) {
+            $data = <<<HTML
+<h2>Welcome to the {$name} view!</h2>
+<p>{{info}}</p>
+HTML;
+        }
+        else {
+            $data = <<<HTML
+<h2>Welcome to the {$name} view!</h2>
+<p>This file is stored in /app/views/{$name}.html</p>
+HTML;
+        }
+
+        $file = fopen($fileName, 'a+');
+
+        ftruncate($file, 0);
+        fwrite($file, $data);
+        fclose($file);
+
+        echo " \033[0;32m" . 'DONE!'. "\r\n";
+    }
+
+    echo "\033[0;37m\r\n";
+}
+
+function main($argv)
+{
+    switch ($argv[1]) {
+        case 'controller':
+            generateController($argv[2]);
+            break;
+        case 'model':
+            generateModel($argv);
+            break;
+        case 'view':
+            generateView($argv[2]);
+            break;
+        case 'scaffold':
+            generateController($argv[2], TRUE);
+            generateModel($argv, TRUE);
+            generateView($argv[2], TRUE);
+            break;
+        default:
+            break;
+    }
+}
+
+main($argv);

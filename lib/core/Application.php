@@ -34,7 +34,7 @@ final class Application
             Logger::write(':: Database instantiated correctly!');
         }
         else {
-            Logger::write('xx Database couldn\'t be initilised!');
+            Logger::write('xx Database couldn\'t be initilised!', Logger::ERROR);
         }
         Logger::write('Application initialized!');
         return TRUE;

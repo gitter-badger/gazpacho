@@ -13,7 +13,7 @@ final class Logger
     static public function write($message = '', $level = Logger::DEBUG)
     {
         $date = date('Ymd');
-        $handler = fopen('../logs/' . $date . '.' . $level,'a+');
+        $handler = fopen(__DIR__ . '/../../logs/' . $date . '.' . $level, 'a+');
 
         if (is_array($message) || is_object($message)) {
             $message = print_r($message, true);
