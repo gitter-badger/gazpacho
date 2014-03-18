@@ -1,6 +1,39 @@
 #!/usr/bin/php
 <?php
 
+function showHelp($command = '')
+{
+    echo "\r\n";
+
+    switch ($command) {
+        case 'controller':
+            echo "Usage: generate {$command} <entity>\r\n\r\n";
+            break;
+        case 'model':
+            echo "Usage: generate {$command} <entity> <field1:type1> <field2:type2> … <fieldN:typeN>\r\n\r\n";
+            echo "Where <field> is the entity's property name\r\n\r\n";
+            echo "And <type> is one of:\r\n\t";
+            echo "string, text, integer, datetime\r\n\r\n";
+            break;
+        case 'view':
+            echo "Usage: generate {$command} <entity>\r\n\r\n";
+            break;
+        case 'scaffold':
+            echo "Usage: generate {$command} <entity> <field1:type1> <field2:type2> … <fieldN:typeN>\r\n\r\n";
+            echo "Where <field> is the entity's property name\r\n\r\n";
+            echo "And <type> is one of:\r\n\t";
+            echo "string, text, integer, datetime\r\n\r\n";
+            break;
+        default:
+            echo "Usage: generate <command> <entity>\r\n\r\n";
+            echo "Where <command> is one of:\r\n\t";
+            echo "controller, model, view, scaffold\r\n\r\n";
+            break;
+    }
+
+    return TRUE;
+}
+
 function checkFileName($path, $name,  $mvc)
 {
     $proceed = TRUE;
@@ -44,6 +77,18 @@ function checkFileName($path, $name,  $mvc)
 
 function generateController($name, $isScaffolding = FALSE)
 {
+    if (!$name) {
+        if ($isScaffolding) {
+            showHelp('scaffold');
+
+            return FALSE;
+        }
+
+        showHelp('controller');
+
+        return FALSE;
+    }
+
     echo "\r\n";
 
     $appConfig = require __DIR__ . '/../config/app.php';
@@ -120,10 +165,24 @@ PHP;
     }
 
     echo "\033[0;37m\r\n";
+
+    return TRUE;
 }
 
 function generateModel($arg, $isScaffolding = FALSE)
 {
+    if (!isset($arg[2])) {
+        if ($isScaffolding) {
+            showHelp('scaffold');
+
+            return FALSE;
+        }
+
+        showHelp('model');
+
+        return FALSE;
+    }
+
     echo "\r\n";
 
     $appConfig = require __DIR__ . '/../config/app.php';
@@ -264,10 +323,24 @@ PHP;
     }
 
     echo "\033[0;37m\r\n";
+
+    return TRUE;
 }
 
 function generateView($name, $isScaffolding = FALSE)
 {
+    if (!$name) {
+        if ($isScaffolding) {
+            showHelp('scaffold');
+
+            return FALSE;
+        }
+
+        showHelp('view');
+
+        return FALSE;
+    }
+
     echo "\r\n";
 
     $appConfig = require __DIR__ . '/../config/app.php';
@@ -301,6 +374,8 @@ HTML;
     }
 
     echo "\033[0;37m\r\n";
+
+    return TRUE;
 }
 
 function main($argv)
@@ -316,11 +391,14 @@ function main($argv)
             generateView($argv[2]);
             break;
         case 'scaffold':
-            generateController($argv[2], TRUE);
-            generateModel($argv, TRUE);
-            generateView($argv[2], TRUE);
+            if (generateController($argv[2], TRUE)) {
+                if (generateModel($argv, TRUE)) {
+                    generateView($argv[2], TRUE);
+                }
+            }
             break;
         default:
+            showHelp();
             break;
     }
 }

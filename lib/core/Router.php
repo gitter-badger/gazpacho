@@ -54,10 +54,10 @@ final class Router
                     Logger::write('>> Executing action "' . $class . '::index"');
                     return $notFoundController->index($e->message());
                 } else {
-                    Logger::write('Existe implementado un "NotFoundController", pero carece de la acción index()… ¡Impleméntala, maldito!', Logger::WARNING);
+                    Logger::write('A "NotFoundController" exists, but it has not an index() action… Implement it, damn!', Logger::WARNING);
                 }
             } else {
-                Logger::write($e->message(), Logger::WARNING);
+                Logger::write('There is not a "NotFoundController"… Implement it, damn!');
             }
         }
     }

@@ -9,8 +9,8 @@ class RouteException extends \Exception
     const CONTROLLER_NOT_FOUND_ERROR = 1;
 
     private $_messages = [
-        'Método "%s" no encontrado…',
-        'Controlador "%s" no encontrado…'
+        'Method "%s" not found…',
+        'Controller "%s" not found…'
     ];
 
     private $_element;

@@ -6,7 +6,8 @@ return [
         'port' => '8889',
         'database' => 'dummy',
         'username' => 'root',
-        'password' => 'root'],
+        'password' => 'root'
+    ],
     'test' => [],
     'production' => []
 ];
