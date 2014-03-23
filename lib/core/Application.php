@@ -5,6 +5,16 @@ use \Gazpacho\Logger;
 use \Gazpacho\Router;
 use \Gazpacho\Database;
 
+/**
+ * This is the main application class.
+ * 
+ * Remember: THIS IS A PSEUDO-STATIC CLASS
+ * The app has three states:
+ *   - initialization()
+ *   - processRequest()
+ *   - finalization()
+ * 
+ */
 final class Application
 {
     static private $_config;
@@ -21,6 +31,13 @@ final class Application
 
     private function __construct() { }
 
+    /**
+     * Initializes the application.
+     *
+     * Loads the app configuration and instantiates the database
+     *
+     * @return bool
+     */
     static public function initialization()
     {
         Logger::write('Application initializing…');
@@ -40,6 +57,14 @@ final class Application
         return TRUE;
     }
 
+    /**
+     * Performs the action requested.
+     *
+     * An action is an object's method. Uses the router to search
+     * the correct action and executes it.
+     *
+     * @return string
+     */
     static public function processRequest()
     {
         Logger::write('Application processing…');
@@ -52,6 +77,13 @@ final class Application
         return $return;
     }
 
+    /**
+     * Finalizes the application.
+     *
+     * Destroys the database instance and releases the resources
+     *
+     * @return bool
+     */
     static public function finalization()
     {
         Logger::write('Application finalizing…');

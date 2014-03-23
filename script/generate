@@ -10,7 +10,7 @@ function showHelp($command = '')
             echo "Usage: generate {$command} <entity>\r\n\r\n";
             break;
         case 'model':
-            echo "Usage: generate {$command} <entity> <field1:type1> <field2:type2> … <fieldN:typeN>\r\n\r\n";
+            echo "Usage: generate {$command} <entity> <field1=type1> <field2=type2> … <fieldN=typeN>\r\n\r\n";
             echo "Where <field> is the entity's property name\r\n\r\n";
             echo "And <type> is one of:\r\n\t";
             echo "string, text, integer, datetime\r\n\r\n";
@@ -19,7 +19,7 @@ function showHelp($command = '')
             echo "Usage: generate {$command} <entity>\r\n\r\n";
             break;
         case 'scaffold':
-            echo "Usage: generate {$command} <entity> <field1:type1> <field2:type2> … <fieldN:typeN>\r\n\r\n";
+            echo "Usage: generate {$command} <entity> <field1=type1> <field2=type2> … <fieldN=typeN>\r\n\r\n";
             echo "Where <field> is the entity's property name\r\n\r\n";
             echo "And <type> is one of:\r\n\t";
             echo "string, text, integer, datetime\r\n\r\n";
@@ -353,14 +353,22 @@ function generateView($name, $isScaffolding = FALSE)
         $data = '';
         if ($isScaffolding) {
             $data = <<<HTML
-<h2>Welcome to the {$name} view!</h2>
-<p>{{info}}</p>
+        <div class="jumbotron">
+            <div class="container text-center">
+                <h1>Welcome to the {$name} view!</h1>
+                <p>{{info}}</p>
+            </div>
+        </div>
 HTML;
         }
         else {
             $data = <<<HTML
-<h2>Welcome to the {$name} view!</h2>
-<p>This file is stored in /app/views/{$name}.html</p>
+        <div class="jumbotron">
+            <div class="container text-center">
+                <h1>Welcome to the {$name} view!</h1>
+                <p>This file is stored in /app/views/{$name}.html.</p>
+            </div>
+        </div>
 HTML;
         }
 
