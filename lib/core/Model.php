@@ -61,10 +61,10 @@ CREATE TABLE IF NOT EXISTS {$table} (
 ) DEFAULT CHARSET=utf8
 SQL;
         try {
-            Application::Database()->query($sql, NULL, NULL, FALSE);
+            Application::Database()->query($sql, NULL, Database::FETCH_MODE_NONE);
             Logger::write('Table "' . $table . '" created successfuly!');
         } catch (DatabaseException $e) {
-            Logger::write('Error de base de datos…');
+            Logger::write('Database error…');
         }
     }
     public function getOne($id)
