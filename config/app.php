@@ -21,6 +21,6 @@
  */
 return [
     'environment' => 'debug',
-    'applicationName' => 'Pixelito',
+    'applicationName' => 'Dummy',
     'version' => '0.0.1'
 ];
