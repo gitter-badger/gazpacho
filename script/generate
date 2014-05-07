@@ -388,26 +388,30 @@ HTML;
 
 function main($argv)
 {
-    switch ($argv[1]) {
-        case 'controller':
-            generateController($argv[2]);
-            break;
-        case 'model':
-            generateModel($argv);
-            break;
-        case 'view':
-            generateView($argv[2]);
-            break;
-        case 'scaffold':
-            if (generateController($argv[2], TRUE)) {
-                if (generateModel($argv, TRUE)) {
-                    generateView($argv[2], TRUE);
+    if (isset($argv[1])) {
+        switch ($argv[1]) {
+            case 'controller':
+                generateController($argv[2]);
+                break;
+            case 'model':
+                generateModel($argv);
+                break;
+            case 'view':
+                generateView($argv[2]);
+                break;
+            case 'scaffold':
+                if (generateController($argv[2], TRUE)) {
+                    if (generateModel($argv, TRUE)) {
+                        generateView($argv[2], TRUE);
+                    }
                 }
+                break;
+            default:
+                showHelp();
+                break;
             }
-            break;
-        default:
-            showHelp();
-            break;
+    } else  {
+        showHelp();
     }
 }
 
