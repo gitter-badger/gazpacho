@@ -24,19 +24,19 @@ You have to set the apache document root to the __public__ folder too!
 You may want to use the `script/generate` tool! It's a useful shell application
 which helps you to create your project files.
 
-+ Generating a controller "home":
+__Generating a controller "home":__
 
 ```bash
 $ script/generate controller post
 ```
 
-+ Generating a view "home":
+__Generating a view "home":__
 
 ```bash
 $ script/generate view post
 ```
 
-+ Generating a model "home":
+__Generating a model "home":__
 
 ```bash
 $ script/generate model post title=string date=datetime author=integer body=text
