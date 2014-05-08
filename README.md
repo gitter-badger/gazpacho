@@ -9,7 +9,7 @@ Gazpacho is a refreshing name for a refreshing new PHP [MVC framework](http://en
 For now, you only can download a bare project and start coding on it.
 
 ```bash
-$ git clone https://github.com/huamma/gazpacho.git
+$ git clone https://github.com/pixelito/gazpacho.git
 ```
 
 ## Configuration
@@ -65,8 +65,8 @@ Application::finalization();   // Close the database connection and release reso
 Keep in mind that Gazpacho use __frendly URL__, so the URL `http://mysite.com/posts/new`
 will call the `PostsController->new();` action.
 
-The model class you generated will create the database tables once the class is reach automatically.
-So you don't need to create the tables on your mariaDB client.
+The model class you generated will create the database tables once the class is reached __automatically__.
+So you __don't__ need to create the tables on your mariaDB client.
 
 ## License 
 
