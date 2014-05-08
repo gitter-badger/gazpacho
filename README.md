@@ -9,7 +9,7 @@ Gazpacho is a refreshing name for a refreshing new PHP [MVC framework](http://en
 For now, you only can download a bare project and start coding on it.
 
 ```bash
-$ git clone https://github.com/pixelito/gazpacho.git
+$ git clone https://github.com/Pixelito/gazpacho.git
 ```
 
 ## Configuration
