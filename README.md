@@ -4,6 +4,8 @@ Gazpacho is a refreshing name for a refreshing new PHP [MVC framework](http://en
 
 > 0.8
 
+![https://travis-ci.org/Pixelito/gazpacho.svg?branch=master]
+
 ## Install
 
 For now, you only can download a bare project and start coding on it.
