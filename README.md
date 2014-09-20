@@ -4,14 +4,14 @@ Gazpacho is a refreshing name for a refreshing new PHP [MVC framework](http://en
 
 > 0.8
 
-![Build status](https://travis-ci.org/Pixelito/gazpacho.svg?branch=master)
+![Build status](https://travis-ci.org/kerunaru/gazpacho.svg?branch=master)
 
 ## Install
 
 For now, you only can download a bare project and start coding on it.
 
 ```bash
-$ git clone https://github.com/Pixelito/gazpacho.git
+$ git clone https://github.com/kerunaru/gazpacho.git
 ```
 
 ## Configuration
