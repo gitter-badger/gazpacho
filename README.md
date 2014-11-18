@@ -7,6 +7,7 @@ Gazpacho is a refreshing name for a refreshing new PHP [MVC framework](http://en
 ![Build status](https://travis-ci.org/kerunaru/gazpacho.svg?branch=master)
 
 ## Install
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/kerunaru/gazpacho?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 For now, you only can download a bare project and start coding on it.
 
